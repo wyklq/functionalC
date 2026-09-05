@@ -8,13 +8,13 @@
 // a function to play with iter
 void
 printint(void *v, void *args) {
-  printf("%d\n", (int)(*(int *)v));
+  printf("%d\n", *(int *)v);
 }
 
 //returns true if int v is odd, false otherwise
 bool
 odd(void *v, void *args) {
-  return (bool)(*((int *)v) % 2);
+  return *((int *)v) % 2 != 0;
 }
 
 //returns twice int v
