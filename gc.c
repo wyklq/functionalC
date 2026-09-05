@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <stdbool.h>
 #include "gc.h"
 #include "closure.h"
 #include "list.h"
@@ -176,9 +177,29 @@ gc_unmark(void *obj) {
   }
 }
 
-//don't register objs twice; boy that could go poorly
+//returns true if obj is already tracked (in either list)
+static bool
+is_registered(void *obj) {
+  for (ref *c = _gc.unmarked; c != NULL; c = c->next) {
+    if (c->ptr == obj) {
+      return true;
+    }
+  }
+  for (ref *c = _gc.marked; c != NULL; c = c->next) {
+    if (c->ptr == obj) {
+      return true;
+    }
+  }
+  return false;
+}
+
+//registering the same obj twice would cause a double free on collect,
+//so we skip pointers that are already tracked
 void
 gc_register(void *obj, TYPE type) {
+  if (is_registered(obj)) {
+    return;
+  }
   ref *n = refitem(obj, type);
   append_unmarked(n); 
 }
