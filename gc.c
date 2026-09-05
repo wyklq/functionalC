@@ -168,14 +168,18 @@ gc_remove(void *obj) {
 
 void
 gc_mark(void *obj) {
-  ref *r = remove_unmarked(obj); 
-  append_marked(r);
+  ref *r = remove_unmarked(obj);
+  if (r != NULL) {
+    append_marked(r);
+  }
 }
 
 void
 gc_unmark(void *obj) {
   ref *r = remove_marked(obj);
-  append_unmarked(r);
+  if (r != NULL) {
+    append_unmarked(r);
+  }
 }
 
 //don't register objs twice; boy that could go poorly
