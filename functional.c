@@ -39,7 +39,7 @@ filter(list *l, bool (*fn)(void *, void *), void *args) {
   list *curr;
   for (curr = l; curr != NULL; curr = curr->next) {
     if ((*fn)(curr->val, args)) {
-      o = append(o, copyitem(curr->val));
+      o = append(o, curr->val);
     }
   }
   return o;
