@@ -63,7 +63,8 @@ copy(list *l) {
   return o; 
 }
 
-//objs flag set to true will also free the objects in the list
+//frees a single list node; the payload it points to is not freed here
+//(the payload is tracked separately by the garbage collector)
 void
 list_free(void *_l) {
   list *l = _l;
