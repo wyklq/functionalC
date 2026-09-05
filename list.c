@@ -6,22 +6,19 @@
 
 list *
 newitem(void *v) {
-  list *o = malloc(sizeof(list));
-  if (o == NULL) {
-    exit(1);
-  }
+  list *o = gc_alloc(sizeof(list), LIST);
   o->val = v;
   o->next = NULL;
-  gc_register((void *)o, LIST);
   return o;
 }
 
 list *
 copyitem(list *i) {
-  list *o = malloc(sizeof(list));
-  if (o == NULL) {
-    exit(1);
+  if (i == NULL) {
+    return NULL;
   }
+  //copyitem is a node allocator: register it, just like newitem
+  list *o = gc_alloc(sizeof(list), LIST);
   o->val = i->val;
   o->next = NULL;
   return o;
@@ -69,6 +66,22 @@ void
 list_free(void *_l) {
   list *l = _l;
   free(l); 
+}
+
+//a list keeps two things alive: its payload and the rest of the list
+void
+list_trace(void *_obj, void (*visit)(void *)) {
+  list *l = _obj;
+  if (l == NULL) {
+    return;
+  }
+  visit(l->val);
+  visit(l->next);
+}
+
+void
+list_register_tracer(void) {
+  gc_register_tracer(LIST, list_trace);
 }
 
 

@@ -19,6 +19,10 @@ list *concat(list *h, list *t);
 list *copy(list *h); 
 void list_free(void *); 
 
+//tells the garbage collector what a list points at
+void list_trace(void *obj, void (*visit)(void *)); 
+void list_register_tracer(void); 
+
 
 #endif
 

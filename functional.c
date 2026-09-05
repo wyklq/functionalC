@@ -3,6 +3,7 @@
 #include "list.h"
 #include "functional.h"
 #include "closure.h"
+#include "gc.h"
 
 //some standard functional programming functions
 void
@@ -50,7 +51,7 @@ list *
 range(int start, int end) {
   list *o = NULL;
   for (int i = start; i <= end; ++i) {
-    int *aloc = malloc(sizeof(int));
+    int *aloc = lift(sizeof(int));
     *aloc = i;  
     o = append(o, (void *)aloc);
   }
