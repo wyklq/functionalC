@@ -66,22 +66,19 @@ remove_unmarked(void *obj) {
   }
   if (curr->ptr == obj) {
     _gc.unmarked = curr->next;
+    if (_gc.unmarked == NULL) {
+      _gc.last_unmarked = NULL;
+    }
     curr->next = NULL;
-    return curr;  
-  }
-  if (_gc.last_unmarked->ptr == obj) {
-    for (; curr->next->ptr != obj; curr = curr->next)
-      ;
-    ref *o = _gc.last_unmarked;
-    o->next = NULL;
-    _gc.last_unmarked = curr;
-    curr->next = NULL; 
-    return o;     
+    return curr;
   }
   for (; curr->next != NULL; curr = curr->next) {
     if (curr->next->ptr == obj) {
       ref *o = curr->next;
       curr->next = o->next;
+      if (o == _gc.last_unmarked) {
+        _gc.last_unmarked = curr;
+      }
       o->next = NULL;
       return o;
     }
@@ -97,22 +94,19 @@ remove_marked(void *obj) {
   }
   if (curr->ptr == obj) {
     _gc.marked = curr->next;
+    if (_gc.marked == NULL) {
+      _gc.last_marked = NULL;
+    }
     curr->next = NULL;
-    return curr;  
-  }
-  if (_gc.last_marked->ptr == obj) {
-    for (; curr->next->ptr != obj; curr = curr->next)
-      ;
-    ref *o = _gc.last_marked;
-    o->next = NULL;
-    _gc.last_marked = curr;
-    curr->next = NULL; 
-    return o;     
+    return curr;
   }
   for (; curr->next != NULL; curr = curr->next) {
     if (curr->next->ptr == obj) {
       ref *o = curr->next;
       curr->next = o->next;
+      if (o == _gc.last_marked) {
+        _gc.last_marked = curr;
+      }
       o->next = NULL;
       return o;
     }
