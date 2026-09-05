@@ -40,6 +40,9 @@ bind(closure *c, void *(*fn)(list *), envobj *env) {
 
 void *
 call(closure *c, envobj *env) {
+  if (c == NULL) {
+    return NULL;
+  }
   list *copylist = copy(c->env);
   copylist = append(copylist, (void *)env);
   return c->fn(copylist);
