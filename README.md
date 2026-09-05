@@ -203,6 +203,21 @@ gc_unmark(void *obj);
 void 
 gc_remove(void *obj);
 ```
+# Issue fixed with LLM
+* 已修复并提交的问题
+
+ 1. heap-buffer-overflow in filter (f71a268) — filter 错误地将 int* payload 传给 copyitem，导致越界读取
+ 2. Makefile 依赖和编译标志 (f71a268) — main.o 未使用 CFLAGS，头文件依赖缺失
+ 3. concat NULL 崩溃 (660c694) — concat(NULL, t) 会解引用空指针
+ 4. call NULL 保护 (01cd95b) — call(NULL, ...) 现在返回 NULL 而不是崩溃
+ 5. gc_mark/gc_unmark 缺失对象处理 (9d74271) — 当对象不在列表中时，会损坏链表
+ 6. remove_ 函数 NULL 解引用和逻辑问题* (5508832) — 简化并修复了脆弱的尾节点特殊处理逻辑
+ 7. list_free 过时注释 (b3767c2) — 更正了注释以反映实际行为
+ 8. gc_register 重复注册 (ce00026) — 添加去重检查，防止 double-free
+ 9. printint 和 odd 清理 (089dcdb) — 移除冗余转换，明确负数处理
+ 10. .gitignore (a4cbe58) — 忽略构建产物
+
+ 所有修复都经过编译验证和 AddressSanitizer 测试。程序运行正常，只剩下预期的内存泄漏（GC 本身就不完整）。
 
 License
 =======
