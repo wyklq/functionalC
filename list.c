@@ -42,6 +42,9 @@ append(list *l, void *v) {
 
 list *
 concat(list *h, list *t) {
+  if (h == NULL) {
+    return t;
+  }
   list *curr;
   for (curr = h; curr->next != NULL; curr = curr->next)
 	  ;
